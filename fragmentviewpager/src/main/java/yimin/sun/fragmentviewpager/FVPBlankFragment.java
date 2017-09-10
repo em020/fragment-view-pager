@@ -41,7 +41,7 @@ public class FVPBlankFragment extends PagerFragment {
                              Bundle savedInstanceState) {
         Log.d("edmund", "onCreateView of " + myFoo);
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_blank, container, false);
+        return inflater.inflate(R.layout.fvp_fragment_blank, container, false);
     }
 
     @Override
