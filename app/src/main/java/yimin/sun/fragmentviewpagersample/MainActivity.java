@@ -7,6 +7,7 @@ import android.os.Bundle;
 import android.view.View;
 import android.widget.NumberPicker;
 
+import yimin.sun.fragmentviewpager.FVPBlankFragment;
 import yimin.sun.fragmentviewpager.FragmentPagerAdapter2;
 import yimin.sun.fragmentviewpager.FragmentViewPager;
 import yimin.sun.fragmentviewpager.PagerFragment;
@@ -23,7 +24,7 @@ public class MainActivity extends AppCompatActivity {
         fragmentViewPager.setAdapter(new FragmentPagerAdapter2(getSupportFragmentManager()) {
             @Override
             public PagerFragment getItem2(int position) {
-                return BlankFragment.newInstance(position);
+                return FVPBlankFragment.newInstance(position);
             }
 
             @Override

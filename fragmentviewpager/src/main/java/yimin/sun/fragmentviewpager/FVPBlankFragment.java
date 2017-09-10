@@ -1,4 +1,4 @@
-package yimin.sun.fragmentviewpagersample;
+package yimin.sun.fragmentviewpager;
 
 import android.os.Bundle;
 import android.support.annotation.Nullable;
@@ -9,24 +9,22 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
-import yimin.sun.fragmentviewpager.PagerFragment;
-
 /**
  * A simple {@link Fragment} subclass.
  */
-public class BlankFragment extends PagerFragment {
+public class FVPBlankFragment extends PagerFragment {
 
     int myFoo;
 
-    public static BlankFragment newInstance(int foo) {
+    public static FVPBlankFragment newInstance(int foo) {
         Bundle bundle = new Bundle();
         bundle.putInt("foo", foo);
-        BlankFragment bf = new BlankFragment();
+        FVPBlankFragment bf = new FVPBlankFragment();
         bf.setArguments(bundle);
         return bf;
     }
 
-    public BlankFragment() {
+    public FVPBlankFragment() {
         // Required empty public constructor
     }
 
@@ -50,7 +48,7 @@ public class BlankFragment extends PagerFragment {
     public void onViewCreated(View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
         TextView tv = (TextView) view.findViewById(R.id.tv);
-        tv.setText("BlankFragment " + myFoo);
+        tv.setText("FVPBlankFragment " + myFoo);
     }
 
     @Override
