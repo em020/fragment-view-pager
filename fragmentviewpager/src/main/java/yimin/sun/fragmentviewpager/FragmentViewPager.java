@@ -9,6 +9,7 @@ import android.support.v4.view.AbsSavedState;
 import android.support.v4.view.PagerAdapter;
 import android.support.v4.view.ViewPager;
 import android.util.AttributeSet;
+import android.util.Log;
 
 /**
  * Created by yzsh-sym on 2017/9/6.
@@ -16,35 +17,35 @@ import android.util.AttributeSet;
 
 public class FragmentViewPager extends ViewPager {
 
-    private int prevPos = 0;
+    private int prevPos = -1;
 
     public FragmentViewPager(Context context, AttributeSet attrs) {
         super(context, attrs);
     }
 
-    @Override
-    public void setCurrentItem(int item) {
-        super.setCurrentItem(item);
-
-        if (item < 0) {
-            item = 0;
-        } else if (item >= getAdapter().getCount()) {
-            item = getAdapter().getCount() - 1;
-        }
-        prevPos = item;
-    }
-
-    @Override
-    public void setCurrentItem(int item, boolean smoothScroll) {
-        super.setCurrentItem(item, smoothScroll);
-
-        if (item < 0) {
-            item = 0;
-        } else if (item >= getAdapter().getCount()) {
-            item = getAdapter().getCount() - 1;
-        }
-        prevPos = item;
-    }
+//    @Override
+//    public void setCurrentItem(int item) {
+//        super.setCurrentItem(item);
+//
+//        if (item < 0) {
+//            item = 0;
+//        } else if (item >= getAdapter().getCount()) {
+//            item = getAdapter().getCount() - 1;
+//        }
+//        prevPos = item;
+//    }
+//
+//    @Override
+//    public void setCurrentItem(int item, boolean smoothScroll) {
+//        super.setCurrentItem(item, smoothScroll);
+//
+//        if (item < 0) {
+//            item = 0;
+//        } else if (item >= getAdapter().getCount()) {
+//            item = getAdapter().getCount() - 1;
+//        }
+//        prevPos = item;
+//    }
 
     @Override
     public void setAdapter(PagerAdapter adapter) {
@@ -58,7 +59,8 @@ public class FragmentViewPager extends ViewPager {
         post(new Runnable() {
             @Override
             public void run() {
-                addOnPageChangeListener(new SimpleOnPageChangeListener() {
+
+                OnPageChangeListener l = new SimpleOnPageChangeListener() {
                     @Override
                     public void onPageSelected(int position) {
                         super.onPageSelected(position);
@@ -75,13 +77,50 @@ public class FragmentViewPager extends ViewPager {
 
                         prevPos = getCurrentItem();
                     }
+                };
 
-                });
+                //noinspection deprecation
+                setOnPageChangeListener(l);
+                l.onPageSelected(getCurrentItem());
 
-                Fragment fragment = getFragment(getCurrentItem());
+                /*addOnPageChangeListener(new SimpleOnPageChangeListener() {
+                    @Override
+                    public void onPageSelected(int position) {
+                        super.onPageSelected(position);
+                        Log.d("VP-onPageChangeListener", "onPageSelected, position = " + position);
+                        // previous onLeave, current onSelect
+                        Fragment prevFragment = getFragment(prevPos);
+                        if (prevFragment instanceof IPagerFragment) {
+                            ((IPagerFragment) prevFragment).onLeave();
+                        }
+
+                        Fragment fragment = getFragment(getCurrentItem());
+                        if (fragment instanceof IPagerFragment) {
+                            ((IPagerFragment) fragment).onSelect();
+                        }
+
+                        prevPos = getCurrentItem();
+                    }
+
+                    @Override
+                    public void onPageScrollStateChanged(int state) {
+                        super.onPageScrollStateChanged(state);
+                        Log.d("VP-onPageChangeListener", "onPageScrollStateChanged, state = " + state);
+                    }
+
+                    @Override
+                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+                        super.onPageScrolled(position, positionOffset, positionOffsetPixels);
+                        Log.d("VP-onPageChangeListener", "onPageScrolled, position = " + position + ", positionOffset = " + positionOffset);
+                    }
+                });*/
+
+                /*Fragment fragment = getFragment(getCurrentItem());
                 if (fragment instanceof IPagerFragment) {
                     ((IPagerFragment) fragment).onSelect();
-                }
+                }*/
+
+
             }
         });
     }
