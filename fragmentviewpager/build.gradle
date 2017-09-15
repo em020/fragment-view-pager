@@ -13,7 +13,7 @@ ext {
     siteUrl = 'https://site-url.foo'
     gitUrl = 'https://git-url.foo'
 
-    libraryVersion = '0.0.6'
+    libraryVersion = '0.0.7'
 
     developerId = 'em020'
     developerName = 'Yimin S'
