@@ -44,8 +44,7 @@ public class FragmentViewPager extends ViewPager {
         }
     };
 
-    public void foobar() {
-        /*l.onPageSelected(getCurrentItem());*/
+    public void dispatchChildOnSelect() {
         Fragment fragment = getFragment(getCurrentItem());
         if (fragment instanceof IPagerFragment) {
             ((IPagerFragment) fragment).onSelect();
@@ -54,7 +53,7 @@ public class FragmentViewPager extends ViewPager {
         prevPos = getCurrentItem();
     }
 
-    public void barfoo() {
+    public void dispatchChildOnLeave() {
         Fragment fragment = getFragment(getCurrentItem());
         if (fragment instanceof IPagerFragment) {
             ((IPagerFragment) fragment).onLeave();

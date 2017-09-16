@@ -9,11 +9,7 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import yimin.sun.fragmentviewpager.FVPBlankFragment;
-import yimin.sun.fragmentviewpager.FragmentPagerAdapter2;
 import yimin.sun.fragmentviewpager.FragmentPagerAdapter2Tier2;
 import yimin.sun.fragmentviewpager.FragmentViewPager;
 import yimin.sun.fragmentviewpager.PagerFragment;
@@ -84,13 +80,12 @@ public class NestedFVPFragment extends PagerFragment {
     @Override
     public void onSelect() {
         Log.d("edmund", "onSelect of NestedFVPFragment");
-        fvp.foobar();
-
+        fvp.dispatchChildOnSelect();
     }
 
     @Override
     public void onLeave() {
         Log.d("edmund", "onLeave of NestedFVPFragment");
-        fvp.barfoo();
+        fvp.dispatchChildOnLeave();
     }
 }
