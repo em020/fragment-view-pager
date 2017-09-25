@@ -23,32 +23,45 @@ public class FragmentViewPager extends ViewPager {
         super(context, attrs);
     }
 
-//    @Override
-//    public void setCurrentItem(int item) {
-//        super.setCurrentItem(item);
-//
-//        if (item < 0) {
-//            item = 0;
-//        } else if (item >= getAdapter().getCount()) {
-//            item = getAdapter().getCount() - 1;
-//        }
-//        prevPos = item;
-//    }
-//
-//    @Override
-//    public void setCurrentItem(int item, boolean smoothScroll) {
-//        super.setCurrentItem(item, smoothScroll);
-//
-//        if (item < 0) {
-//            item = 0;
-//        } else if (item >= getAdapter().getCount()) {
-//            item = getAdapter().getCount() - 1;
-//        }
-//        prevPos = item;
-//    }
+    OnPageChangeListener l = new SimpleOnPageChangeListener() {
+        @Override
+        public void onPageSelected(int position) {
+            super.onPageSelected(position);
+            // previous onLeave, current onSelect
+            if (prevPos != getCurrentItem()) {
+                Fragment prevFragment = getFragment(prevPos);
+                if (prevFragment instanceof PagerFragment) {
+                    ((PagerFragment) prevFragment).onLeaveInner();
+                }
+            }
+
+            Fragment fragment = getFragment(getCurrentItem());
+            if (fragment instanceof PagerFragment) {
+                ((PagerFragment) fragment).onSelectInner();
+            }
+
+            prevPos = getCurrentItem();
+        }
+    };
+
+    public void dispatchChildOnSelect() {
+        Fragment fragment = getFragment(getCurrentItem());
+        if (fragment instanceof PagerFragment) {
+            ((PagerFragment) fragment).onSelectInner();
+        }
+
+        prevPos = getCurrentItem();
+    }
+
+    public void dispatchChildOnLeave() {
+        Fragment fragment = getFragment(getCurrentItem());
+        if (fragment instanceof PagerFragment) {
+            ((PagerFragment) fragment).onLeaveInner();
+        }
+    }
 
     @Override
-    public void setAdapter(PagerAdapter adapter) {
+    public void setAdapter(final PagerAdapter adapter) {
         super.setAdapter(adapter);
         // implement onSelect onLeave
 
@@ -56,70 +69,18 @@ public class FragmentViewPager extends ViewPager {
             throw new IllegalArgumentException("FragmentViewPager only accepts FragmentPagerAdapter2 instances as adapter!");
         }
 
+        //在post中设置setOnPageChangeListener是为了应对在从后台杀死状态恢复现场时
         post(new Runnable() {
             @Override
             public void run() {
 
-                OnPageChangeListener l = new SimpleOnPageChangeListener() {
-                    @Override
-                    public void onPageSelected(int position) {
-                        super.onPageSelected(position);
-                        // previous onLeave, current onSelect
-                        Fragment prevFragment = getFragment(prevPos);
-                        if (prevFragment instanceof PagerFragment) {
-                            ((PagerFragment) prevFragment).onLeaveInner();
-                        }
-
-                        Fragment fragment = getFragment(getCurrentItem());
-                        if (fragment instanceof PagerFragment) {
-                            ((PagerFragment) fragment).onSelectInner();
-                        }
-
-                        prevPos = getCurrentItem();
-                    }
-                };
-
                 //noinspection deprecation
                 setOnPageChangeListener(l);
-                l.onPageSelected(getCurrentItem());
-
-                /*addOnPageChangeListener(new SimpleOnPageChangeListener() {
-                    @Override
-                    public void onPageSelected(int position) {
-                        super.onPageSelected(position);
-                        Log.d("VP-onPageChangeListener", "onPageSelected, position = " + position);
-                        // previous onLeave, current onSelect
-                        Fragment prevFragment = getFragment(prevPos);
-                        if (prevFragment instanceof IPagerFragment) {
-                            ((IPagerFragment) prevFragment).onLeave();
-                        }
-
-                        Fragment fragment = getFragment(getCurrentItem());
-                        if (fragment instanceof IPagerFragment) {
-                            ((IPagerFragment) fragment).onSelect();
-                        }
-
-                        prevPos = getCurrentItem();
-                    }
-
-                    @Override
-                    public void onPageScrollStateChanged(int state) {
-                        super.onPageScrollStateChanged(state);
-                        Log.d("VP-onPageChangeListener", "onPageScrollStateChanged, state = " + state);
-                    }
-
-                    @Override
-                    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
-                        super.onPageScrolled(position, positionOffset, positionOffsetPixels);
-                        Log.d("VP-onPageChangeListener", "onPageScrolled, position = " + position + ", positionOffset = " + positionOffset);
-                    }
-                });*/
-
-                /*Fragment fragment = getFragment(getCurrentItem());
-                if (fragment instanceof IPagerFragment) {
-                    ((IPagerFragment) fragment).onSelect();
-                }*/
-
+                if (adapter instanceof FragmentPagerAdapter2Tier2) {
+                    // 嵌套的情况，不主动触发onSelect
+                } else {
+                    l.onPageSelected(getCurrentItem());
+                }
 
             }
         });

@@ -9,11 +9,8 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
-import butterknife.BindView;
-import butterknife.ButterKnife;
-import butterknife.Unbinder;
 import yimin.sun.fragmentviewpager.FVPBlankFragment;
-import yimin.sun.fragmentviewpager.FragmentPagerAdapter2;
+import yimin.sun.fragmentviewpager.FragmentPagerAdapter2Tier2;
 import yimin.sun.fragmentviewpager.FragmentViewPager;
 import yimin.sun.fragmentviewpager.PagerFragment;
 
@@ -29,6 +26,8 @@ public class NestedFVPFragment extends PagerFragment {
 //    FragmentViewPager fvp;
 
 //    Unbinder unbinder;
+
+    FragmentViewPager fvp;
 
     public NestedFVPFragment() {
         // Required empty public constructor
@@ -47,10 +46,10 @@ public class NestedFVPFragment extends PagerFragment {
         super.onViewCreated(view, savedInstanceState);
         /*unbinder = ButterKnife.bind(this, view);*/
 
-        FragmentViewPager fvp = (FragmentViewPager) view.findViewById(R.id.fvp);
+        fvp = (FragmentViewPager) view.findViewById(R.id.fvp);
         TabLayout tabLayout = (TabLayout) view.findViewById(R.id.tab_layout);
 
-        fvp.setAdapter(new FragmentPagerAdapter2(getChildFragmentManager()) {
+        fvp.setAdapter(new FragmentPagerAdapter2Tier2(getChildFragmentManager()) {
             @Override
             public PagerFragment getItem2(int position) {
                 return FVPBlankFragment.newInstance(position);
@@ -75,17 +74,18 @@ public class NestedFVPFragment extends PagerFragment {
         Log.d("edmund", "onDestroyView of NestedFVPFragment");
         super.onDestroyView();
         /*unbinder.unbind();*/
+        fvp = null;
     }
 
     @Override
     public void onSelect() {
         Log.d("edmund", "onSelect of NestedFVPFragment");
-
+        fvp.dispatchChildOnSelect();
     }
 
     @Override
     public void onLeave() {
         Log.d("edmund", "onLeave of NestedFVPFragment");
-
+        fvp.dispatchChildOnLeave();
     }
 }
