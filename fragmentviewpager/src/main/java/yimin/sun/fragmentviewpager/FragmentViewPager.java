@@ -66,13 +66,13 @@ public class FragmentViewPager extends ViewPager {
                         super.onPageSelected(position);
                         // previous onLeave, current onSelect
                         Fragment prevFragment = getFragment(prevPos);
-                        if (prevFragment instanceof IPagerFragment) {
-                            ((IPagerFragment) prevFragment).onLeave();
+                        if (prevFragment instanceof PagerFragment) {
+                            ((PagerFragment) prevFragment).onLeaveInner();
                         }
 
                         Fragment fragment = getFragment(getCurrentItem());
-                        if (fragment instanceof IPagerFragment) {
-                            ((IPagerFragment) fragment).onSelect();
+                        if (fragment instanceof PagerFragment) {
+                            ((PagerFragment) fragment).onSelectInner();
                         }
 
                         prevPos = getCurrentItem();
